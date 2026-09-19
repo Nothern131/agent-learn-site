@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  // GitHub Pages: base = /<repo-name>/
-  // 本地开发时 base 为 / 不影响
-  base: process.env.GITHUB_PAGES ? '/agent-learn-site/' : '/',
+  // 本地开发 base=/；GitHub Pages 部署时用 --base=/agent-learn-site/ 覆盖
+  base: '/',
   server: {
     port: 5180,
     host: true,
