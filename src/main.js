@@ -44,6 +44,7 @@ function renderNav() {
   const groups = [
     { title: '原理主课', ids: ['ch0', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6', 'ch7', 'ch8'] },
     { title: '进阶 · 视野', ids: ['ch85', 'ch12', 'hard', 'rag', 'prompt', 'sec', 'cap'] },
+    { title: '实战 · 追问', ids: ['probe'] },
     { title: '工程 · 基础', ids: ['wf'] },
     { title: '认知 · 未来', ids: ['human'] },
     { title: '产品 · 冲刺', ids: ['prod', 'sprint'] },
@@ -114,6 +115,7 @@ function chapterView(c) {
     else if (c.id === 'prompt') { cardTitle = '提示词工程 6 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
     else if (c.id === 'sec') { cardTitle = 'Agent 安全 8 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
     else if (c.id === 'wf') { cardTitle = '公司工作流 8 问'; cardHint = '点右上角「揭」看公司 Git/CI/CD/Review/部署全景，先看题自己答'; }
+    else if (c.id === 'probe') { cardTitle = 'Agent 追问链 8 题'; cardHint = '点右上角「揭」看四层追问 + 面试官考察意图，这是大厂真正的分水岭'; }
     else if (c.id === 'cap') { cardTitle = '模型能力 6 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
     else if (c.id === 'human') { cardTitle = 'AI 时代人类该学什么'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
     body += `<div class="section"><h4>${cardTitle}</h4><div class="cards-hint">${cardHint}</div><div class="cards">${c.cards.map((k, i) => `
