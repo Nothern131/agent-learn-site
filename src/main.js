@@ -109,7 +109,7 @@ function chapterView(c) {
     if (c.id === 'prod') { cardTitle = '9 张产品题速卡'; }
     else if (c.id === 'hr') { cardTitle = 'HR 行为面 10 问'; cardHint = '点右上角「揭」看回答模板 + HR 真实意图'; }
     else if (c.id === 'hard') { cardTitle = '大厂 Agent 硬核 13 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
-    else if (c.id === 'rag') { cardTitle = 'RAG 深度 10 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
+    else if (c.id === 'rag') { cardTitle = 'RAG 深度 14 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
     else if (c.id === 'prompt') { cardTitle = '提示词工程 6 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
     else if (c.id === 'sec') { cardTitle = 'Agent 安全 6 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
     else if (c.id === 'cap') { cardTitle = '模型能力 6 问'; cardHint = '点右上角「揭」看深度答案 + 面试官考察意图，先看题自己答'; }
