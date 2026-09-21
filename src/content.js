@@ -638,6 +638,57 @@ export const chapters = [
     ],
   },
   {
+    id: 'wf',
+    no: 'WF',
+    tag: '工程基础',
+    title: '公司工作流 8 问',
+    sub: '从提交代码到上线，公司到底怎么用 Git/CI/CD/Review',
+    readMinutes: 12,
+    points: ['Git 分支模型', 'CI/CD 流水线', '多语言 Monorepo', 'Code Review 文化', '部署策略'],
+    cards: [
+      {
+        title: '公司用什么 Git 分支模型？跟学校的"一个 main 分支"差在哪？',
+        body: '学校是"一个 main 分支，直接 commit push"，公司是"功能分支 + PR + Code Review + CI 全绿"。三大主流模型：①Git Flow（版本化产品）——有 develop/release/hotfix 分支，流程重，适合手机 App；②GitHub Flow（Web/SaaS）——只有 main + 功能分支，PR 审查后合并，大多数互联网公司用；③Trunk-Based（大厂持续集成）——所有人往 main 提交，短分支+特性开关，适合高并发迭代。核心区别：你提交的不是"代码"而是"变更（Change）"，每个变更要经过自动化验证+人工审查才能进 main。面试金句：学校是「提交即完成」，公司是「提交是起点，CI 全绿+Review 通过才是完成」。',
+        intent: '考察你是否理解企业 Git 工作流（不是"会 git add/commit"是"懂分支模型+PR 流程"）。及格线：说出 GitHub Flow。优秀线：能对比三种模型适用场景 + 说出"Conventional Commits + Squash Merge + 功能分支命名规范"完整链路。面试官追问"为什么用 Squash Merge"——答案是保持 main 历史干净，一个功能一个 commit，方便 revert。这题区分"写过代码"和"在公司写过代码"。',
+      },
+      {
+        title: '提交代码后，CI/CD 到底跑了什么？7 个阶段是什么？',
+        body: '你 push 代码后，CI 自动跑 7 个阶段：①静态检查（ESLint/Ruff/golangci-lint + TypeScript/tsc 类型检查 + Prettier/black 格式）——失败阻断；②单元测试（Jest/pytest/JUnit + 代码覆盖率 >80%）——失败阻断；③集成测试（起 Docker 容器跑数据库/Redis + API 集成测试 + E2E 浏览器测试）——失败阻断；④构建产物（前端 npm run build → dist/，后端 go build/mvn package，打 Docker 镜像推送到 Registry）；⑤部署到 Staging（自动部署到预发布环境 + 冒烟测试）；⑥人工审批（运维/负责人点"批准"）；⑦部署到 Production（蓝绿/金丝雀 + 监控 5 分钟无异常）。关键认知：你提交的每个 PR，背后有 7 个阶段在自动跑，任何一环失败 PR 都合不进去。面试金句：CI 是代码质量的安全网，不是「跑个测试」。',
+        intent: '考察 CI/CD 工程落地能力（不是"知道有 CI"是"懂每个阶段在干嘛"）。及格线：说出"Lint→单测→构建→部署"。优秀线：能讲出 7 阶段完整链路 + 每阶段的阻断条件 + "Staging 冒烟测试 + 人工审批"两道关卡。面试官追问"测试挂了怎么办"——答案是阻断 PR + 自动通知 + 修复后重跑。这题考"你知道提交后发生了什么"。',
+      },
+      {
+        title: 'Conventional Commits 是什么？为什么公司强制用？',
+        body: '提交信息不是"随便写"，而是规范格式：<type>(<scope>): <subject>。types：feat（新功能）、fix（修 bug）、docs（文档）、style（格式）、refactor（重构）、test（测试）、perf（性能）、chore（构建/依赖）。示例：feat(pay): add Stripe webhook handler / fix(auth): handle null session on token refresh。为什么强制：①自动 changelog（从 commit 信息生成版本说明）；②语义化版本控制（feat 升 minor，fix 升 patch）；③Code Review 时一眼看出改动类型；④CI 可以根据 type 决定跑哪些测试（test 类只跑单测，feat 类跑全量）。面试金句："提交信息是代码的一部分，不是写给自己看的，是写给未来的自己和同事看的"。',
+        intent: '考察提交规范意识（"懂 git"和"懂公司 git"的区别）。及格线：说出"feat/fix/docs 分类"。优秀线：能讲出"自动 changelog + 语义化版本 + CI 分流"三个实际价值。面试官追问"你们怎么保证大家遵守"——答案是 git hook（commit-msg 检查）+ CI 强制校验 + PR 模板。这题区分"个人开发者"和"团队协作开发者"。',
+      },
+      {
+        title: '前端 TypeScript 项目，提交前/CI 里到底跑什么命令？',
+        body: '前端（TS/React/Vite）提交前本地跑：npx tsc --noEmit（类型检查）+ npx eslint .（Lint）+ npx prettier --check .（格式）+ npm test（单测）。CI 里跑：npm ci（用 lockfile 安装依赖，保证版本一致，不是 npm install）→ npm run typecheck → npm run lint → npm test -- --coverage（覆盖率检查）→ npm run build（构建 dist/）。关键细节：①用 npm ci 而非 npm install（CI 必须可重现，lockfile 锁定版本）；②构建产物（dist/）永远不提交到 Git（.gitignore 忽略，由 CI 构建）；③Prettier 格式化是强制的（git pre-commit hook 自动跑，不手动调）；④代码覆盖率低于 80% 阻断 PR。面试金句：前端 CI 的核心是「类型检查 + Lint + 测试 + 构建」四件套，用 lockfile 保证可重现。',
+        intent: '考察前端工程化落地能力（不是"会写 React"是"懂提交后发生了什么"）。及格线：说出"tsc + eslint + jest"。优秀线：能讲出"npm ci 用 lockfile + dist 不提交 + Prettier hook + 覆盖率阻断"四个工程细节。面试官追问"为什么不用 npm install"——答案是 CI 必须可重现，lockfile 锁定依赖版本。这题考"你知道前端 CI 怎么配"。',
+      },
+      {
+        title: '后端 Python/Go/Java 分别怎么管依赖和测试？',
+        body: 'Python（FastAPI/Django）：用 pyproject.toml（Poetry 管理，不是 requirements.txt），CI 里 pip install → black --check（格式）+ flake8（Lint）+ mypy（类型）+ pytest --cov=app --cov-fail-under=80（测试+覆盖率），测试必须 mock 外部依赖（数据库/API）。Go：用 golangci-lint（一个工具跑所有 Lint：gofmt+golint+staticcheck+...）+ go test -race（竞态检测，必开）+ 多阶段 Docker 构建（golang:1.21 编译 → alpine 运行）。Java（Spring Boot）：Maven 多模块（common/service/web 分层）+ checkstyle（代码风格）+ spotbugs（静态分析）+ mvn dependency:check（依赖安全检查）+ jar 进 Docker。关键共性：①每种语言用自己的 Linter，CI 强制跑；②测试必须 mock 外部依赖（不打真实数据库）；③Docker 镜像是部署单元（不是裸二进制）。面试金句："Go 用 golangci-lint，Python 用 Poetry+black+mypy，Java 用 Maven+checkstyle，每种语言有自己的工具链但 CI 流程一样"。',
+        intent: '考察多语言工程化认知（不是"会写 Python"是"懂 Python 在公司怎么管"）。及格线：说出"pytest + Docker"。优秀线：能对比三种语言的工具链（Go:golangci-lint / Python:Poetry+black+mypy / Java:Maven+checkstyle）+ 说出"测试 mock 外部依赖 + Docker 是部署单元"。面试官追问"Go 为什么要开 -race"——答案是检测数据竞争，并发 bug 很难在测试里暴露。这题考"你懂每种语言的工程规范"。',
+      },
+      {
+        title: '多语言 Monorepo 怎么管？前端 TS + 后端 Go + Python 服务放一个仓库，冲突怎么办？',
+        body: '这是大厂最常见模式（前端 TS + 后端 Go + Python 微服务 + 共享 proto 文件）。目录结构：frontend/（package.json）+ backend/（go.mod）+ services/（Python pyproject.toml）+ shared/（proto/类型定义）+ infra/（K8s 配置）+ turbo.json（Turborepo 管构建顺序）。冲突解决：①依赖版本不一致——每个语言子目录有自己的 lockfile，CI 分别安装；②构建顺序依赖——Turborepo/Nx 定义 DAG（shared → services → frontend，下游依赖上游）；③共享代码同步——protobuf/TypeScript 类型从 .proto 文件自动生成（protoc 工具链）；④CI 资源竞争——按语言分 pipeline（前端/后端/Python 各自独立 CI job，最后合并结果）；⑤代码风格——每种语言用自己的 Linter（ESLint/golangci-lint/black）；⑥提交原子性——跨语言改动必须一个 PR（CI 全绿才能合并，防止"前端改了但后端没跟上"）。面试金句：Monorepo 用 Turborepo 管构建 DAG + 各语言独立 CI pipeline + protobuf 共享类型 + K8s 统管部署，冲突靠「一个 PR 改完 + CI 全绿」。',
+        intent: '考察 Monorepo 工程能力（不是"知道有 Nx"是"懂多语言怎么协同"）。及格线：说出"各语言独立 lockfile + CI 分别跑"。优秀线：能讲出"Turbo 构建 DAG + protobuf 生成共享类型 + 按语言分 pipeline + 跨语言改动一个 PR"完整方案。面试官追问"前端改了 proto 后端没跟上怎么办"——答案是 CI 会编译 proto 验证，后端代码没更新会编译失败阻断 PR。这题是"大厂多语言协作"的核心考点。',
+      },
+      {
+        title: 'Code Review 到底审什么？有什么礼仪？',
+        body: '必查项：逻辑正确性 + 边界条件（空值/越界/并发）+ 错误处理（不能静默吞异常）+ 安全（注入/权限/敏感数据）+ 性能（N+1 查询/内存泄漏）+ 可读性（命名/注释/结构）+ 测试覆盖。不查项：代码格式（CI 自动跑 Prettier/black，不用人看）+ 依赖版本（CI 自动检查）。Review 礼仪——给意见：具体（"这行在并发下会 race condition"而非"写得好"）+ 建设性（"建议用 mutex"而非"错了"）+ 分级（[BLOCKING] 必须改 / [SUGGESTION] 可选 / [FYI] 仅知会）。接收意见：先理解再反驳 + 能改就改不能改就解释 + 不 git push --force（会丢别人 review 的内容）。面试金句：Review 审的是「逻辑/安全/性能/可维护性」，格式让 CI 管，人管机器管不了的事。',
+        intent: '考察 Code Review 文化认知（不是"知道有 Review"是"懂审什么+怎么审+怎么被审"）。及格线：说出"逻辑+边界+错误处理"。优秀线：能讲出"必查 7 项 + 不查 2 项 + 给意见三级（BLOCKING/SUGGESTION/FYI）+ 不 force push"完整礼仪。面试官追问"Review 卡住了怎么推进"——答案是分级意见，BLOCKING 必须解决，SUGGESTION 可协商，避免"完美主义卡 PR"。这题考"团队工程文化"。',
+      },
+      {
+        title: '部署到生产用什么策略？怎么观察上线后有没有问题？',
+        body: '四种部署策略：①滚动部署（逐个替换 Pod/实例，大多数 Web 服务用）；②蓝绿部署（两套完整环境，切流量，关键业务如支付用）；③金丝雀（先 5% 流量，观察无异常再逐步放大到 100%，新模型/新算法上线用）；④特性开关（代码已部署但功能关闭，逐步开启，高风险功能用）。上线后必看：错误率（5xx 比例）+ 延迟（P99/P95）+ 资源（CPU/内存/磁盘）+ 业务指标（订单量/活跃度）。告警分级：P0（立即响应，服务不可用/数据丢失）+ P1（1 小时内，错误率 >1%/延迟 >2s）+ P2（当天处理，资源接近上限）+ P3（排期处理，日志噪音）。面试金句：上线不是「部署完就走」，是「金丝雀 5% → 观察 10 分钟 → 放大到 50% → 全量」，每步看错误率和延迟。',
+        intent: '考察部署与监控工程能力（不是"知道有 K8s"是"懂上线节奏+观察指标"）。及格线：说出"滚动部署 + 看错误率"。优秀线：能讲出"蓝绿/金丝雀/特性开关三种策略适用场景 + P99/P95 延迟 + P0~P3 告警分级"完整链路。面试官追问"上线后发现问题怎么回滚"——答案是"蓝绿一键切回旧环境 / 特性开关关闭功能 / 滚动部署反向滚动"。这题考"你知道上线后怎么保命"。',
+      },
+    ],
+  },
+  {
     id: 'cap',
     no: 'CAP',
     tag: '大厂进阶',
@@ -728,10 +779,10 @@ export const chapters = [
 
 export const intro = {
   slogan: '把 Agent 原理像一本杂志一样拆开学',
-  sub: '9 份手册 · 8 天计划 · 12 节官方课 · 9 张产品题 · 62 道大厂深度题（并发/RAG/提示词/安全/模型能力/认知未来）—— 全部装进一个能打卡、能速查、能闭卷复习的网页。',
+  sub: '9 份手册 · 8 天计划 · 12 节官方课 · 9 张产品题 · 70 道大厂深度题（并发/RAG/提示词/安全/模型能力/认知未来/公司工作流）—— 全部装进一个能打卡、能速查、能闭卷复习的网页。',
   stats: [
-    { k: 21, label: '原理章节' },
-    { k: 62, label: '大厂深度题' },
+    { k: 22, label: '原理章节' },
+    { k: 70, label: '大厂深度题' },
     { k: 12, label: '官方课节' },
     { k: 8, label: '天计划' },
   ],
